@@ -26,10 +26,10 @@ parameters: #parameters = {'max_depth':[4,8,16,32], 'n_estimators':[4,8,16,32], 
       min: 1
       max: 32
   - name: bootstrap
-    type: categorical
-    categorical_values:
-      - True
-      - False
+    type: int
+    grid:
+      - 0
+      - 1
   - name: max_features
     type: categorical
     categorical_values:

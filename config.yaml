@@ -35,7 +35,6 @@ parameters: #parameters = {'max_depth':[4,8,16,32], 'n_estimators':[4,8,16,32], 
     categorical_values:
       - 'sqrt'
       - 'log2'
-      - None
   - name: criterion
     type: categorical
     categorical_values:

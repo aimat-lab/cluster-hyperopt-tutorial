@@ -1,0 +1,4 @@
+name: tutorial_project
+channels:
+  - defaults
+prefix: /home/kit/iti/ew0464/miniconda3/envs/tutorial_project

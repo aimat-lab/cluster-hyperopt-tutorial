@@ -14,17 +14,17 @@ experiment:
   number_chain_jobs: 4 # How many times should a job - the suggestion evaluation - be chained together. It is used to
                        # cirumvent the problem of time outs in the cluster
   multimetric_experiment: false
-parameters: #parameters = {'max_depth':[4,8,16,32], 'n_estimators':[4,8,16,32], 'bootstrap':[True,False], 'max_features': ['sqrt','log2',None], 'criterion':['gini','entropy']}
+parameters:
   - name: max_depth
     type: int
     bounds:
       min: 1
-      max: 32
+      max: 10
   - name: n_estimators
     type: int
     bounds:
       min: 1
-      max: 32
+      max: 10
   - name: bootstrap
     type: int
     grid:

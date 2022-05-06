@@ -53,7 +53,7 @@ def run_hyperopt(config=None):
 
     return result, metadata
 
-parameters = {'max_depth':[4,8,16,32], 'n_estimators':[4,8,16,32], 'bootstrap':[True,False], 'max_features': ['sqrt','log2',None], 'criterion':['gini','entropy']}
+parameters = {'max_depth':[4,8,16,32], 'n_estimators':[4,8,16,32], 'bootstrap':[True,False], 'max_features': ['sqrt','log2'], 'criterion':['gini','entropy']}
 
 if __name__ == '__main__':
     config = {

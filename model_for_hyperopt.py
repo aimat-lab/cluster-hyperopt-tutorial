@@ -12,7 +12,7 @@ class Model:
 
     random_state = None
 
-    def __init__(self, random_state = 0):
+    def __init__(self, random_state=0):
         self.random_state = random_state
 
     def train(self, n_estimators, criterion, max_depth, bootstrap, max_features):
@@ -30,8 +30,10 @@ class Model:
         self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(X, y, test_size=0.33,
                                                                                 random_state=self.random_state)
 
+def run():
+    raise NotImplementedError
 
-def main(config=None):
+def run_hyperopt(config=None):
     suggestion = config['suggestion']
     n_estimators = suggestion['n_estimators']
     criterion = suggestion['criterion']
@@ -43,7 +45,12 @@ def main(config=None):
     model.load_dataset()
     model.train(n_estimators=n_estimators, criterion=criterion, max_depth=max_depth,
                 bootstrap=bootstrap, max_features=max_features)
-    print(model.evaluate())
+
+    result = model.evaluate()
+    metadata = None
+    print(result)
+
+    return result, metadata
 
 parameters = {'max_depth':[4,8,16,32], 'n_estimators':[4,8,16,32], 'bootstrap':[True,False], 'max_features': ['sqrt','log2',None], 'criterion':['gini','entropy']}
 
@@ -57,4 +64,4 @@ if __name__ == '__main__':
             'max_features': 'sqrt'
         }
     }
-    main(config)
+    run_hyperopt(config)

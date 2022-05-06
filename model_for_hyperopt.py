@@ -24,9 +24,10 @@ class Model:
         return self.rfc.score(self.X_test, self.y_test)
 
     def load_dataset(self):
-        iris = datasets.load_iris()
-        X = iris.data
-        y = iris.target
+        #ds = datasets.load_iris()
+        ds = datasets.load_wine()
+        X = ds.data
+        y = ds.target
         self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(X, y, test_size=0.33,
                                                                                 random_state=self.random_state)
 
@@ -57,9 +58,9 @@ parameters = {'max_depth':[4,8,16,32], 'n_estimators':[4,8,16,32], 'bootstrap':[
 if __name__ == '__main__':
     config = {
         "suggestion": {
-            'n_estimators': 1,
+            'n_estimators': 3,
             'criterion': 'entropy',
-            'max_depth': 5,
+            'max_depth': 2,
             'bootstrap': True,
             'max_features': 'sqrt'
         }

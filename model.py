@@ -1,13 +1,6 @@
-# Tutorial
+from sklearn.ensemble import RandomForestClassifier
 
-This Project is a Tutorial to set up your model for hyperparameter search using the cluster-hyperopt repository.
 
-In this tutorial we will create:
-0. a simple model, that is not yet usable for hyperparameter search
-1. a function, that will be called by the hyperparameter search algorithm
-2. the config file, that defines all necessary parameters
-   1. WICHTIG: Erklären wie die parameter angegeben werden!
-```
 class Model:
     rfc = None      # The Random Forest Classifier
 
@@ -24,4 +17,3 @@ class Model:
 
     def evaluate(self, X_test, y_test):
         return self.rfc.score(X_test, y_test)
-```py

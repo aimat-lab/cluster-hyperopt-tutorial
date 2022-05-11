@@ -1,68 +1,47 @@
-from sklearn.ensemble import RandomForestClassifier
+from model import Model
 from sklearn import datasets
 from sklearn.model_selection import train_test_split
 
+random_state = 0
 
-class Model:
-    rfc = None
-    X_train = None
-    X_test = None
-    y_train = None
-    y_test = None
 
-    random_state = None
+def run_without_hyperopt():
+    # load and split dataset
+    ds = datasets.load_wine()
+    X_train, X_test, y_train, y_test = train_test_split(ds.data, ds.target, test_size=0.33, random_state=random_state)
 
-    def __init__(self, random_state=0):
-        self.random_state = random_state
+    # train and evaluate model
+    model = Model()
+    model.train(X_train=X_train, y_train=y_train, n_estimators=5, criterion='entropy', max_depth=5,
+                bootstrap=True, max_features='sqrt')
+    print(model.evaluate(X_test=X_test, y_test=y_test))
 
-    def train(self, n_estimators, criterion, max_depth, bootstrap, max_features):
-        self.rfc = RandomForestClassifier(n_estimators=n_estimators, criterion=criterion, max_depth=max_depth,
-                                          bootstrap=bootstrap, max_features=max_features, random_state=self.random_state)
-        self.rfc.fit(X=self.X_train, y=self.y_train)
 
-    def evaluate(self):
-        return self.rfc.score(self.X_test, self.y_test)
-
-    def load_dataset(self):
-        #ds = datasets.load_iris()
-        ds = datasets.load_wine()
-        X = ds.data
-        y = ds.target
-        self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(X, y, test_size=0.33,
-                                                                                random_state=self.random_state)
-
-def run():
-    raise NotImplementedError
-
-def run_hyperopt(config=None):
-    suggestion = config['suggestion']
+def run_hyperopt(hyperopt_config=None):
+    # Extract options
+    suggestion = hyperopt_config['suggestion']
     n_estimators = suggestion['n_estimators']
     criterion = suggestion['criterion']
     max_depth = suggestion['max_depth']
     bootstrap = suggestion['bootstrap']
     max_features = suggestion['max_features']
 
+    # load and split dataset
+    # this is not optimal, since we only need to download the dataset once. We only use this for simplicity
+    ds = datasets.load_wine()
+    X_train, X_test, y_train, y_test = train_test_split(ds.data, ds.target, test_size=0.33, random_state=random_state)
+
+    # train and evaluate model
     model = Model()
-    model.load_dataset()
-    model.train(n_estimators=n_estimators, criterion=criterion, max_depth=max_depth,
+    model.train(X_train=X_train, y_train=y_train, n_estimators=n_estimators, criterion=criterion, max_depth=max_depth,
                 bootstrap=bootstrap, max_features=max_features)
 
-    result = model.evaluate()
+    result = model.evaluate(X_test=X_test, y_test=y_test)
     metadata = None
     print(result)
 
     return result, metadata
 
-parameters = {'max_depth':[4,8,16,32], 'n_estimators':[4,8,16,32], 'bootstrap':[True,False], 'max_features': ['sqrt','log2'], 'criterion':['gini','entropy']}
 
 if __name__ == '__main__':
-    config = {
-        "suggestion": {
-            'n_estimators': 3,
-            'criterion': 'entropy',
-            'max_depth': 2,
-            'bootstrap': True,
-            'max_features': 'sqrt'
-        }
-    }
-    run_hyperopt(config)
+    run_without_hyperopt()

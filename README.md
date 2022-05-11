@@ -7,7 +7,10 @@ In this tutorial we will create:
 1. a function, that will be called by the hyperparameter search algorithm
 2. the config file, that defines all necessary parameters
    1. WICHTIG: Erklären wie die parameter angegeben werden!
-```
+```py
+from sklearn.ensemble import RandomForestClassifier
+
+
 class Model:
     rfc = None      # The Random Forest Classifier
 
@@ -24,4 +27,4 @@ class Model:
 
     def evaluate(self, X_test, y_test):
         return self.rfc.score(X_test, y_test)
-```py
+```

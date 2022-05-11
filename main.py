@@ -20,6 +20,7 @@ def run_without_hyperopt():
 def run_hyperopt(hyperopt_config=None):
     # Extract options
     suggestion = hyperopt_config['suggestion']
+
     n_estimators = suggestion['n_estimators']
     criterion = suggestion['criterion']
     max_depth = suggestion['max_depth']

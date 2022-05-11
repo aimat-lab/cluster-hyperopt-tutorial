@@ -1,6 +1,6 @@
 model:
   dataset_path: "/home/kit/iti/ew0464/gan_experiment/dataset/cifar-10-python.tar.gz" #dummy dataset.
-  entry_point: "model_for_hyperopt.py" # The python file name that includes the function for evaluating the suggestions
+  entry_point: "main.py" # The python file name that includes the function for evaluating the suggestions
   function_name: "run_hyperopt"
   copy_data: true # If the data should be copied in the workspace
 git_options:

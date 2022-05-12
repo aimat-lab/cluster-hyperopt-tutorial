@@ -46,6 +46,7 @@ Therefore we create the file ```main.py``` with the function ```run_without_hype
 This function trains the model with the following hyperparameters:
    - n_estimators = 5
    - criterion = 'entropy'
+   - max_depth = 5
    - bootstrap = True
    - max_features = 'sqrt'
 

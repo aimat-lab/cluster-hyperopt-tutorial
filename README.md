@@ -75,3 +75,45 @@ if __name__ == '__main__':
 
 2. In this second step we create a function that will be called by the 
 hyperparameter optimizer and returns the accuracy and metadata of the model.
+We add this function to the ```main.py``` file.
+```run_hyperopt(hyperopt_config=None)``` takes a run configuration as input. 
+This configuration contains the suggested hyperparameters for our model.
+   1. In part 01 the function extracts the suggestion from the hyperopt_config
+   and from the suggestion it can get the values for each hyperparameter
+   2. Part 02 is about loading the dataset and splitting it into the train and test parts.
+   3. In part 03 the function trains and evaluates the model. Afterwards it returns 
+   the result (accuracy) and the metadata. 
+   This is important, since the optimizer expects this return format.
+```py
+def run_hyperopt(hyperopt_config=None):
+    # Extract options (Part 01)
+    suggestion = hyperopt_config['suggestion']
+
+    n_estimators = suggestion['n_estimators']
+    criterion = suggestion['criterion']
+    max_depth = suggestion['max_depth']
+    bootstrap = suggestion['bootstrap']
+    max_features = suggestion['max_features']
+
+    # load and split dataset (Part 02)
+    # this is not optimal, since we only need to download the dataset once. We only use this for simplicity
+    ds = datasets.load_wine()
+    X_train, X_test, y_train, y_test = train_test_split(ds.data, ds.target, test_size=0.33, random_state=random_state)
+
+    # train and evaluate model (Part 03)
+    model = Model()
+    model.train(X_train=X_train, y_train=y_train, n_estimators=n_estimators, criterion=criterion, max_depth=max_depth,
+                bootstrap=bootstrap, max_features=max_features)
+
+    result = model.evaluate(X_test=X_test, y_test=y_test)
+    metadata = None
+    print(result)
+
+    return result, metadata
+```
+Right now it is not yet possible to start the hyperparameter search. We first need to write a 
+configuration file, which defines all parameters needed for the hyperparameter search.
+
+3. In the 3rd Section we create the configuration file needed to run the hyperparameter search. 
+Do not confuse this configuration file with the hyperopt_config parameter
+for the ```run_hyperopt(hyperopt_config=None)``` function, created in section 2.

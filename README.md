@@ -12,7 +12,8 @@ In this tutorial we will create:
    1. WICHTIG: Erklären wie die parameter angegeben werden!
    
 
-1. We create a file ```model.py```. It contains the class ```Model```, 
+### Section 1
+We create a file ```model.py```. It contains the class ```Model```, 
 which has functions to create, train and evaluate a random forest classifier imported from sklearn.
 As you can see, the train function allows us to set the number of trees (```n_estimators```), 
 the splitting criterion (```criterion```), the maximum depth for a tree (```max_depth```), 
@@ -73,7 +74,9 @@ if __name__ == '__main__':
     run_without_hyperopt()
 ```
 
-2. In this second step we create a function that will be called by the 
+
+### Section 2
+In this second step we create a function that will be called by the 
 hyperparameter optimizer and returns the accuracy and metadata of the model.
 We add this function to the ```main.py``` file.
 ```run_hyperopt(hyperopt_config=None)``` takes a run configuration as input. 
@@ -114,6 +117,18 @@ def run_hyperopt(hyperopt_config=None):
 Right now it is not yet possible to start the hyperparameter search. We first need to write a 
 configuration file, which defines all parameters needed for the hyperparameter search.
 
-3. In the 3rd Section we create the configuration file needed to run the hyperparameter search. 
+
+### Section 3
+In the 3rd Section we create the configuration file needed to run the hyperparameter search. 
 Do not confuse this configuration file with the hyperopt_config parameter
 for the ```run_hyperopt(hyperopt_config=None)``` function, created in section 2.
+The config file can be split in roughly 7 parts:
+   - **model**
+   - **git_options**
+   - **experiment**
+   - **parameters**: defines all hyperparameters
+   - **metrics**: defines the kind of metric and whether to minimize or maximize it.
+   - **sbatch_options**: Contains the sbatch options (see Slurm), to add to the execution script. 
+                     Important Note: What happens with those options is different for HoreKA 
+                     and BWUniCluster, since the parallelization of both differs.
+   - **sigopt_options**

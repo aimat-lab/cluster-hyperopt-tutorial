@@ -133,3 +133,77 @@ The config file can be split in roughly 7 parts:
                      Important Note: What happens with those options is different for HoreKA 
                      and BWUniCluster, since the parallelization of both differs.
    - **sigopt_options**
+
+We will create the file step by step. Starting with the model options:
+```yaml
+model:
+    dataset_path: "/home/dataset/cifar-10-python.tar.gz" #dummy dataset.
+    entry_point: "main.py" # The python file name that includes the function for evaluating the suggestions
+    function_name: "run_hyperopt"
+    copy_data: true # If the data should be copied in the workspace
+```
+- The ```dataset_path``` defines the path to a dataset. Right now it is not possible to leave it empty yet. 
+    But we can define a dummy path, that won't be used.
+- ```entry_point``` is the python file that includes the ```run_hyperopt(hyperopt_config=None)``` function
+- ```function_name``` defines the name of the function that will be executed by the hyperparameter search algorithm.
+    In our case: ```"run_hyperopt"```
+
+The next part is about the git options:
+```yaml
+git_options:
+    git_uri: "git@github.com:u-adrian/Tutorial.git"
+    branch: "main" # Either branch or version can be used. Using the option version allows to load specific tags
+```
+- ```git_uri```: The uri to the git repository. This is "git@github.com:u-adrian/Tutorial.git" for this project.
+- The ```branch``` defines the branch of the repository.
+
+```yaml
+experiment:
+    use_local_workspace: false # If a local experiment folder should be created in root folder or a dedicated workspace
+                            # directory (https://wiki.bwhpc.de/e/Workspace)
+    experiment_name: "tutorial_project"
+    cluster: "horeka"  # Either "bwunicluster" or "horeka"
+    number_chain_jobs: 4 # How many times should a job - the suggestion evaluation - be chained together. It is used to
+                       # cirumvent the problem of time outs in the cluster
+    multimetric_experiment: false
+```
+- ```use_local_workspace```
+- ```experiment_name```
+- ```cluster```
+- ```number_chain_jobs```
+
+Now we define the hyperparameters that we want to optimize.
+- The first hyperparameter is ```max_depth```. The datatype must be integer and we restrict it to an interval from 
+    1 to 10: max_depth in [1,10]. We chose the same settings for the number of 
+    trees (```n_estimators```) in the forest. The third parameter ```bootstrap``` is a boolean. 
+    Since it is not possible to define booleans in "SigOpt" we use the integers 0 and 1.
+    ```max_features``` is a categorical value and we chose the two options "sqrt" and "log2".
+    ```criterion``` is also of type "categorical" with the possible values "gini" and "entropy".
+```yaml
+parameters:
+  - name: max_depth
+    type: int
+    bounds:
+      min: 1
+      max: 10
+  - name: n_estimators
+    type: int
+    bounds:
+      min: 1
+      max: 10
+  - name: bootstrap
+    type: int
+    grid:
+      - 0
+      - 1
+  - name: max_features
+    type: categorical
+    categorical_values:
+      - 'sqrt'
+      - 'log2'
+  - name: criterion
+    type: categorical
+    categorical_values:
+      - 'gini'
+      - 'entropy'
+```

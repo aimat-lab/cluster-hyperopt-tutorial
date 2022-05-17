@@ -168,10 +168,10 @@ experiment:
     multimetric_experiment: false
 ```
 - ```use_local_workspace```
-- ```experiment_name```
-- ```cluster```
-- ```number_chain_jobs```
-
+- ```experiment_name```: The name of the experiment. Will be used to create an experiment on SigOpt.
+- ```cluster``` Defines the algorithm to use. You can choose between "horeka" and "bwunicluster".
+    This setting has a great effect what happens with the "sbatch_options".
+- ```number_chain_jobs``` Since there is a maximum time a job can run on the clusters we need to chain jobs together.
 Now we define the hyperparameters that we want to optimize.
 The first hyperparameter is ```max_depth```. The datatype must be integer and we restrict it to an interval from 
     1 to 10: max_depth in [1,10]. We chose the same settings for the number of 
@@ -206,4 +206,48 @@ parameters:
     categorical_values:
       - 'gini'
       - 'entropy'
+```
+
+Now we define the metrics we want to optimize:
+The objective is to maximize it. Set the strategy to "optimize"
+```yaml
+metrics:
+  - name: accuracy
+    objective: maximize
+    strategy: optimize
+```
+
+The sbatch options are a crucial part to get the hyperparameter search run properly on
+the BWUniCluster and HoreKA. Since the choice of the cluster affects those settings we will discuss the settings
+for HoreKA and also for the BWUniCluster. You can find a brief description of both implementations here TODO
+
+HoreKA
+```yaml
+sbatch_options:
+  partition: "dev_gpu_4"
+  gres: "gpu:4"
+  ntasks: 4
+  mem-per-gpu: 32000
+  time: "10"
+```
+
+In the last step we define the ```sigopt_options```.
+- ```dev_run: true``` is used to test your implementation. 
+    The generated suggestion cannot be used to find good hyperparameters.
+    After you tested your application with ```dev_run: true``` and everything works you can 
+    change it to ```dev_run: false```, with this setting SigOpt will create useful suggestion.
+- ```project_id``` is the ID of your Project, that you created on SigOpt. Make sure, that a project with 
+                this ID already exists.
+- ```client_id``` Is your Identifier for SigOpt. 
+  To find your client id, you need to login to SigOpt and open "API Tokens".
+- ```observation_budget``` defines how many hyperparameter-suggestions can be created in total.
+- ```parallel_bandwidth``` is the number of suggestion that can be created simultaneously. Set this to the
+  number of models you evaluate in parallel.
+```yaml
+sigopt_options:
+  dev_run: false # If the dev api of sigopt should be used to get the suggestions
+  project_name: "test_project"
+  client_id: 11949
+  observation_budget: 60 # Max number of trials
+  parallel_bandwidth: 4 # Number of parallel evaluations
 ```

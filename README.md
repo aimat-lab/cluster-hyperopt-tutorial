@@ -173,7 +173,7 @@ experiment:
 - ```number_chain_jobs```
 
 Now we define the hyperparameters that we want to optimize.
-- The first hyperparameter is ```max_depth```. The datatype must be integer and we restrict it to an interval from 
+The first hyperparameter is ```max_depth```. The datatype must be integer and we restrict it to an interval from 
     1 to 10: max_depth in [1,10]. We chose the same settings for the number of 
     trees (```n_estimators```) in the forest. The third parameter ```bootstrap``` is a boolean. 
     Since it is not possible to define booleans in "SigOpt" we use the integers 0 and 1.

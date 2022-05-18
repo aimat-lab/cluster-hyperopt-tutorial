@@ -142,7 +142,7 @@ model:
     function_name: "run_hyperopt"
     copy_data: true # If the data should be copied in the workspace
 ```
-- The ```dataset_path``` defines the path to a dataset. Right now it is not possible to leave it empty yet. 
+- The ```dataset_path``` defines the path to a dataset. Right now it is not possible to leave it empty. 
     But we can define a dummy path, that won't be used.
 - ```entry_point``` is the python file that includes the ```run_hyperopt(hyperopt_config=None)``` function
 - ```function_name``` defines the name of the function that will be executed by the hyperparameter search algorithm.
@@ -172,13 +172,18 @@ experiment:
 - ```cluster``` Defines the algorithm to use. You can choose between "horeka" and "bwunicluster".
     This setting has a great effect what happens with the "sbatch_options".
 - ```number_chain_jobs``` Since there is a maximum time a job can run on the clusters we need to chain jobs together.
+
+
 Now we define the hyperparameters that we want to optimize.
-The first hyperparameter is ```max_depth```. The datatype must be integer and we restrict it to an interval from 
-    1 to 10: max_depth in [1,10]. We chose the same settings for the number of 
-    trees (```n_estimators```) in the forest. The third parameter ```bootstrap``` is a boolean. 
+- The first hyperparameter is ```max_depth```. The datatype must be integer and we restrict it to an interval from 
+    1 to 10.
+- We chose the same settings for the number of 
+    trees (```n_estimators```) in the forest. 
+- The third parameter ```bootstrap``` is a boolean. 
     Since it is not possible to define booleans in "SigOpt" we use the integers 0 and 1.
-    ```max_features``` is a categorical value and we chose the two options "sqrt" and "log2".
-    ```criterion``` is also of type "categorical" with the possible values "gini" and "entropy".
+    We use "grid" in this example, so you can see how to define a set of integers.
+- ```max_features``` is a categorical value, and we chose the two options "sqrt" and "log2".
+- ```criterion``` is also of type "categorical" with the possible values "gini" and "entropy".
 ```yaml
 parameters:
   - name: max_depth
@@ -217,11 +222,20 @@ metrics:
     strategy: optimize
 ```
 
-The sbatch options are a crucial part to get the hyperparameter search run properly on
+The ```sbatch_options``` are a crucial part to get the hyperparameter search run properly on
 the BWUniCluster and HoreKA. Since the choice of the cluster affects those settings we will discuss the settings
-for HoreKA and also for the BWUniCluster. You can find a brief description of both implementations here TODO
+for HoreKA and also for the BWUniCluster. You can find a brief description of both implementations here TODO.
 
-HoreKA
+- We use the partition "dev_gpu_4" on the horeka cluster.
+- The ```gres:gpu:4``` defines the number of gpus allocated by each job. In this case 4. 
+- Each job will execute 4 parallel tasks, to optimize 4 models in parallel. We set ntasks to 4.
+- mem-per-gpu corresponds to the memory per task. Use this option to define your memory per tasks. 
+Other options like "mem:" or "mem-per-cpu" might not work properly and prevent the tasks to run in parallel.
+Make sure that the node has not less than 4x the memory you define here. We choose ```mem-per-gpu: 32000````. That's 32 GB.
+- We set the time limit per job to 10 minutes: ```time: "10"```.
+
+[Here](https://slurm.schedmd.com/sbatch.html) you can find a description for all sbatch options.
+
 ```yaml
 sbatch_options:
   partition: "dev_gpu_4"

@@ -1,25 +1,25 @@
 # Tutorial
 
-This Project is a Tutorial to set up your model for hyperparameter search using the cluster-hyperopt repository.
+This Project is a Tutorial to set up your model for hyperparameter search using the 
+[cluster-hyperopt repository](https://github.com/aimat-lab/cluster-hyperopt) .
 
-In this tutorial we will create:
+This tutorial is separated into 8 Sections:
 
-0. a conda environment for this project
+- Section 0: Creating a conda environment for this project
 
-1. a simple model, that is not yet usable for hyperparameter search
+- Section 1: Creating a simple model, that is not yet usable for hyperparameter search
 
-2. a function, that will be called by the hyperparameter search algorithm
+- Section 2: a function, that will be called by the hyperparameter search algorithm
 
-3. the config file, that defines all necessary parameters
-   1. WICHTIG: Erklären wie die parameter angegeben werden!
+- Section 3: the config file, that defines all necessary parameters
 
-4. SigOpt
+- Section 4: SigOpt
 
-5. Other files needed 
+- Section 5: Other files needed 
 
-6.  
+- Section 6: 
 
-7. Appendix: How The implementations of horeka and bwunicluster differ
+- Section 7: Appendix: How The implementations of horeka and bwunicluster differ
 
 ### Section 0
 We assume that you already installed conda.
@@ -312,4 +312,6 @@ Now cluster hyperopt can connect to sigopt.
 Now we can run the hyperparameter search
 
 ```python .../sigopt_hyperopt/hyperopt.py start --config_path=.../hypopt_conf.yaml```
+
+### Section 7
 

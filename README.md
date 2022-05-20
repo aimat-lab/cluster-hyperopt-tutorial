@@ -4,13 +4,30 @@ This Project is a Tutorial to set up your model for hyperparameter search using 
 
 In this tutorial we will create:
 
+0. a conda environment for this project
+
 1. a simple model, that is not yet usable for hyperparameter search
 
 2. a function, that will be called by the hyperparameter search algorithm
 
 3. the config file, that defines all necessary parameters
    1. WICHTIG: Erklären wie die parameter angegeben werden!
-   
+
+4. SigOpt
+
+5. Other files needed 
+
+6.  
+
+7. Appendix: How The implementations of horeka and bwunicluster differ
+
+### Section 0
+We assume that you already installed conda.
+Create a new environment using ```conda create -n "tutorial" ```. 
+You can name the environment how you want. We chose "tutorial".
+Make sure pip is installed inside this environment.
+We install sklearn using pip:
+```pip install -U scikit-learn```
 
 ### Section 1
 We create a file ```model.py```. It contains the class ```Model```, 
@@ -41,7 +58,7 @@ class Model:
         return self.rfc.score(X_test, y_test)
 ```
 
-We now need a function that loads a dataset, creates a Model, trains and evaluate it. 
+We now need a function that loads a dataset, creates a Model, trains and evaluates it. 
 Therefore we create the file ```main.py``` with the function ```run_without_hyperopt()```.
 This function trains the model with the following hyperparameters:
    - n_estimators = 5
@@ -77,7 +94,7 @@ if __name__ == '__main__':
 
 
 ### Section 2
-In this second step we create a function that will be called by the 
+In this second section we create a function that will be called by the 
 hyperparameter optimizer and returns the accuracy and metadata of the model.
 We add this function to the ```main.py``` file.
 ```run_hyperopt(hyperopt_config=None)``` takes a run configuration as input. 
@@ -265,3 +282,34 @@ sigopt_options:
   observation_budget: 60 # Max number of trials
   parallel_bandwidth: 4 # Number of parallel evaluations
 ```
+
+### Section 4
+To let our hyperparameter search run on the server we need a conda environment, which includes all dependencies.
+For this we create a file "environment.yaml". With this file "cluster_hyperopt" 
+can create an environment fully automatically.
+
+open a shell.
+activate your conda environment.
+
+```conda env export > environment.yaml```
+
+### Section 5
+To have access sigopt from the server you need the API Token and Development Token.
+We create a file ```sigopt_token``` where we store those tokens:
+
+```
+SIGOPT_TOKEN=**********************************************
+SIGOPT_DEV_TOKEN=**********************************************
+```
+Then we store the path to this file in a system variable:
+
+```export SIGOPT_ENV_FILE=path/sigopt_token```
+
+Now cluster hyperopt can connect to sigopt.
+
+### Section 6
+
+Now we can run the hyperparameter search
+
+```python .../sigopt_hyperopt/hyperopt.py start --config_path=.../hypopt_conf.yaml```
+

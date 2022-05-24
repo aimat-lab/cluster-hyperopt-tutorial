@@ -5,33 +5,34 @@ This Project is a Tutorial to set up your model for hyperparameter search using 
 
 This tutorial is separated into 8 Sections:
 
-- Section 0: Creating a conda environment for this project
+- Section 1: Creating a conda environment for this project
 
-- Section 1: Creating a simple model, that is not yet usable for hyperparameter search
+- Section 2: Creating a simple model, that is not yet usable for hyperparameter search
 
-- Section 2: a function, that will be called by the hyperparameter search algorithm
+- Section 3: A function that will be called by the hyperparameter search algorithm
 
-- Section 3: the config file, that defines all necessary parameters
+- Section 4: The config file, that defines all necessary parameters
 
-- Section 4: SigOpt
+- Section 5: SigOpt
 
-- Section 5: Other files needed 
+- Section 6: Other files needed 
 
-- Section 6: 
+- Section 7: Running the Hyperopt 
 
-- Section 7: Appendix: How The implementations of horeka and bwunicluster differ
+- Section 8: Appendix: How The implementations of horeka and bwunicluster differ
 
-### Section 0
-We assume that you already installed conda.
+### Section 1
+We assume that you have already installed conda.
+
 Create a new environment using ```conda create -n "tutorial" ```. 
 You can name the environment how you want. We chose "tutorial".
 Make sure pip is installed inside this environment.
-We install sklearn using pip:
-```pip install -U scikit-learn```
+Install sklearn using pip:```pip install -U scikit-learn```
 
-### Section 1
+### Section 2
 We create a file ```model.py```. It contains the class ```Model```, 
 which has functions to create, train and evaluate a random forest classifier imported from sklearn.
+
 As you can see, the train function allows us to set the number of trees (```n_estimators```), 
 the splitting criterion (```criterion```), the maximum depth for a tree (```max_depth```), 
 if we want to use bootstrapping (```bootstrap```) and how many random features 
@@ -93,7 +94,7 @@ if __name__ == '__main__':
 ```
 
 
-### Section 2
+### Section 3
 In this second section we create a function that will be called by the 
 hyperparameter optimizer and returns the accuracy and metadata of the model.
 We add this function to the ```main.py``` file.
@@ -136,7 +137,7 @@ Right now it is not yet possible to start the hyperparameter search. We first ne
 configuration file, which defines all parameters needed for the hyperparameter search.
 
 
-### Section 3
+### Section 4
 In the 3rd Section we create the configuration file needed to run the hyperparameter search. 
 Do not confuse this configuration file with the hyperopt_config parameter
 for the ```run_hyperopt(hyperopt_config=None)``` function, created in section 2.
@@ -244,11 +245,11 @@ the BWUniCluster and HoreKA. Since the choice of the cluster affects those setti
 for HoreKA and also for the BWUniCluster. You can find a brief description of both implementations here TODO.
 
 - We use the partition "dev_gpu_4" on the horeka cluster.
-- The ```gres:gpu:4``` defines the number of gpus allocated by each job. In this case 4. 
+- The ```gres: gpu:4``` defines the number of gpus allocated by each job. In this case 4. 
 - Each job will execute 4 parallel tasks, to optimize 4 models in parallel. We set ntasks to 4.
 - mem-per-gpu corresponds to the memory per task. Use this option to define your memory per tasks. 
 Other options like "mem:" or "mem-per-cpu" might not work properly and prevent the tasks to run in parallel.
-Make sure that the node has not less than 4x the memory you define here. We choose ```mem-per-gpu: 32000````. That's 32 GB.
+Make sure that the node has not less than 4x the memory you define here. We choose ```mem-per-gpu: 32000```. That's 32 GB.
 - We set the time limit per job to 10 minutes: ```time: "10"```.
 
 [Here](https://slurm.schedmd.com/sbatch.html) you can find a description for all sbatch options.
@@ -283,17 +284,18 @@ sigopt_options:
   parallel_bandwidth: 4 # Number of parallel evaluations
 ```
 
-### Section 4
-To let our hyperparameter search run on the server we need a conda environment, which includes all dependencies.
+### Section 5
+To let our hyperparameter search run on the server we need a conda environment, 
+which includes all dependencies.
 For this we create a file "environment.yaml". With this file "cluster_hyperopt" 
 can create an environment fully automatically.
 
-open a shell.
-activate your conda environment.
+Open a shell inside your project folder,
+activate the environment and execute the following command:
 
 ```conda env export > environment.yaml```
 
-### Section 5
+### Section 6
 To have access sigopt from the server you need the API Token and Development Token.
 We create a file ```sigopt_token``` where we store those tokens:
 
@@ -301,17 +303,49 @@ We create a file ```sigopt_token``` where we store those tokens:
 SIGOPT_TOKEN=**********************************************
 SIGOPT_DEV_TOKEN=**********************************************
 ```
+
+You can find your tokens on the SigOpt website: _Your Username_ >
 Then we store the path to this file in a system variable:
 
 ```export SIGOPT_ENV_FILE=path/sigopt_token```
 
 Now cluster hyperopt can connect to sigopt.
 
-### Section 6
+### Section 7
 
 Now we can run the hyperparameter search
 
 ```python .../sigopt_hyperopt/hyperopt.py start --config_path=.../hypopt_conf.yaml```
 
-### Section 7
+### Section 8: HoreKA and BWUniCluster
+This Section is not part of the Tutorial. Its purpose is to explain the differences of the two implementations.
+It might also help if you don't know which sbatch_options you have to use (see Section 4). 
 
+**The Main Difference between HoreKA and BWUniCluster is, that it is not possible to run 
+multiple jobs on a node on the HoreKA cluster at the same time.**
+
+![Figure_1](images/BWUniCluster.png)
+This images shows the concept of the application running on the BWUniCLuster.
+The Experiment starts 4 Workerchains. The jobs 101, 201, 301, 401 run in parallel.
+When job 101 finishes job 102 will start (Job 102 is hidden behind job 101 in this image).
+
+
+![Figure_2](images/HoreKACluster.png)
+Here you can see the concept behind the implementation for the HoreKA Cluster:
+The Job 001 starts 4 Subtasks, which can run in parallel. What you cannot see in this image
+is the experiment and the workerchain. For this implementation we only use one workerchain
+and when job 001 finishes job 002 can start, which will also start 4 parallel subtasks.
+
+
+Now we have a look on the similarities of both implementations:
+In both cases the experiment will create a script and workerchain. 
+The workerchain gets the script from the experiment and will execute it 4 times
+so that the created jobs are chained together. 
+
+For example: you want you chain 4 jobs and use a parallel bandwidth of 4.
+
+Then the BwUniCluster impl. will create 4x4=16 jobs.
+
+In contrast, the HoreKa impl. will only create 4 jobs.
+
+![Figure_3](images/similarities.png)

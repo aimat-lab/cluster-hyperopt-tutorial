@@ -325,12 +325,14 @@ It might also help if you don't know which sbatch_options you have to use (see S
 multiple jobs on a node on the HoreKA cluster at the same time.**
 
 ![Figure_1](images/BWUniCluster.png)
+
 This images shows the concept of the application running on the BWUniCLuster.
 The Experiment starts 4 Workerchains. The jobs 101, 201, 301, 401 run in parallel.
 When job 101 finishes job 102 will start (Job 102 is hidden behind job 101 in this image).
 
 
 ![Figure_2](images/HoreKACluster.png)
+
 Here you can see the concept behind the implementation for the HoreKA Cluster:
 The Job 001 starts 4 Subtasks, which can run in parallel. What you cannot see in this image
 is the experiment and the workerchain. For this implementation we only use one workerchain

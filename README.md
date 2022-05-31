@@ -138,7 +138,7 @@ configuration file, which defines all parameters needed for the hyperparameter s
 
 
 ### Section 4
-In the 3rd Section we create the configuration file needed to run the hyperparameter search. 
+In the 4. Section we create the configuration file needed to run the hyperparameter search. 
 Do not confuse this configuration file with the hyperopt_config parameter
 for the ```run_hyperopt(hyperopt_config=None)``` function, created in section 2.
 The config file can be split in roughly 7 parts:

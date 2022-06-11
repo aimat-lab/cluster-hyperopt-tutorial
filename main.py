@@ -17,9 +17,9 @@ def run_without_hyperopt():
     print(model.evaluate(X_test=X_test, y_test=y_test))
 
 
-def run_hyperopt(hyperopt_config=None):
+def run_hyperopt(config=None):
     # Extract options
-    suggestion = hyperopt_config['suggestion']
+    suggestion = config['suggestion']
 
     n_estimators = suggestion['n_estimators']
     criterion = suggestion['criterion']

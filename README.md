@@ -278,7 +278,7 @@ In the last step we define the ```sigopt_options```.
 ```yaml
 sigopt_options:
   dev_run: false # If the dev api of sigopt should be used to get the suggestions
-  project_name: "test_project"
+  project_id: "test_project"
   client_id: 11949
   observation_budget: 60 # Max number of trials
   parallel_bandwidth: 4 # Number of parallel evaluations

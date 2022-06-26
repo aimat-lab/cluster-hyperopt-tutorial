@@ -26,8 +26,6 @@ def run_hyperopt(config=None):
     max_depth = suggestion['max_depth']
     bootstrap = suggestion['bootstrap']
     max_features = suggestion['max_features']
-    
-    print("config_dict:", config)
 
     # load and split dataset
     # this is not optimal, since we only need to download the dataset once. We only use this for simplicity

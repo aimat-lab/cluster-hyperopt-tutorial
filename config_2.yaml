@@ -1,0 +1,58 @@
+git_options:
+  git_uri: "git@github.com:u-adrian/Tutorial.git"
+  branch: "main"
+model:
+  entry_point: "main.py"
+  function_name: "run_hyperopt"
+data_options:
+  dataset_path: "/home/kit/iti/ew0464/gan_experiment/dataset/cifar-10-python.tar.gz" #dummy dataset. # optional
+  copy_data: false # optional; default?
+experiment:
+  use_local_workspace: false # optional
+  cluster: "bwunicluster"
+  number_chain_jobs: 4
+  parallel_bandwidth: 4
+  observation_budget: 60
+  #conda_env: name_of_env # added
+parameters:
+  - name: max_depth
+    type: int
+    bounds:
+      min: 1
+      max: 10
+  - name: n_estimators
+    type: int
+    bounds:
+      min: 1
+      max: 10
+  - name: bootstrap
+    type: int
+    grid:
+      - 0
+      - 1
+  - name: max_features
+    type: categorical
+    categorical_values:
+      - 'sqrt'
+      - 'log2'
+  - name: criterion
+    type: categorical
+    categorical_values:
+      - 'gini'
+      - 'entropy'
+metrics:
+  - name: accuracy
+    objective: maximize
+    strategy: optimize
+sbatch_options:
+  partition: "dev_gpu_4"
+  #gres: "gpu:4" # optional
+  #ntasks: 4 # optional
+  #mem-per-gpu: 32000 # optional
+  #time: "10" # optional
+sigopt_options:
+  dev_run: true
+  project_id: "test_project"
+  experiment_name: "tutorial_project" # added/moved here
+  client_id: 11949
+

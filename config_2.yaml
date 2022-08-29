@@ -4,11 +4,11 @@ git_options:
 model:
   entry_point: "main.py"
   function_name: "run_hyperopt"
-data_options:
-  dataset_path: "/home/kit/iti/ew0464/gan_experiment/dataset/cifar-10-python.tar.gz" #dummy dataset. # optional
-  copy_data: false # optional; default?
+# data_options:
+  # dataset_path: "/home/kit/iti/ew0464/gan_experiment/dataset/cifar-10-python.tar.gz" #dummy dataset. # optional
+  # copy_data: false # optional; default?
 experiment:
-  use_local_workspace: false # optional
+  # use_local_workspace: false # optional
   cluster: "bwunicluster"
   number_chain_jobs: 4
   parallel_bandwidth: 4

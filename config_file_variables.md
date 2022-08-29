@@ -1,13 +1,15 @@
 ### model
-- dataset_path: The path to a dataset. You cannot leave this variable empty. If you don't want to use a
-dataset you still need to define a path to a dataset, even if you don't use it
-
 - entry_point: Defines the file where the function for hyperparameter optimization is located
 
 - function_name: The function that executes the hyperparameter optimization 
 (training and evaluation of the model)
 
-- copy_data: TODO
+
+### data_options
+- dataset_path: The path to a dataset. You cannot leave this variable empty. If you don't want to use a
+dataset you still need to define a path to a dataset, even if you don't use it
+
+- copy_data: If the chosen dataset should be copied into the workspace
 
 ### git_options
 - git_uri: The git URI to the repository of your model
@@ -16,11 +18,7 @@ dataset you still need to define a path to a dataset, even if you don't use it
 
 ### experiment
 - use_local_workspace: If a local experiment folder should be created in root folder or a dedicated workspace 
-directory (https://wiki.bwhpc.de/e/Workspace). 
-
-
-- experiment_name: "tutorial_project" The name of the sigopt experiment. 
-Make sure that an experiment with this name exists or create one on SigOpt.
+directory (https://wiki.bwhpc.de/e/Workspace).
 
 
 - cluster: Either "bwunicluster" or "horeka". Defines the cluster you are working on
@@ -40,7 +38,12 @@ How to calculate the number of chained jobs:
   - number_chain_jobs = (observation_budget * t_eval) / (parallel_bandwith * time)
     Round this number up and maybe increase it a bit, to make sure, that the hyperparameter search has enough time.
     But if the time is not enough and the search stops before it is finished you still have the option to continue it.
+  
 
+- observation_budget: 60 # Max number of trials
+
+
+- parallel_bandwidth: 4 # Number of parallel evaluations
 
 
 - multimetric_experiment: Defines if multiple metrics/losses/scores should be evaluated. Default should be False.
@@ -194,7 +197,13 @@ cluster you use.
 ### sigopt_options TODO
   - dev_run: Used to toggle dev_run. If dev_run is true, the created suggestions are random and the hyperparameter search won't work.
     Use this option to debug your code and set it to false when your code works.
+
+
   - project_id: The id of your project. You can find this online when you are logged in to SigOpt
+
+
+  - experiment_name: "tutorial_project" The name of the sigopt experiment. 
+    Make sure that an experiment with this name exists or create one on SigOpt.
+
+
   - client_id: 11949
-  - observation_budget: 60 # Max number of trials
-  - parallel_bandwidth: 4 # Number of parallel evaluations

@@ -6,8 +6,7 @@
 
 
 ### data_options
-- dataset_path: The path to a dataset. You cannot leave this variable empty. If you don't want to use a
-dataset you still need to define a path to a dataset, even if you don't use it
+- dataset_path: The path to a dataset. This variable is optional. If you don't want to set it delete data_options completely.
 
 - copy_data: If the chosen dataset should be copied into the workspace
 
@@ -18,7 +17,7 @@ dataset you still need to define a path to a dataset, even if you don't use it
 
 ### experiment
 - use_local_workspace: If a local experiment folder should be created in root folder or a dedicated workspace 
-directory (https://wiki.bwhpc.de/e/Workspace).
+directory (https://wiki.bwhpc.de/e/Workspace). This variable is optional. The default is false.
 
 
 - cluster: Either "bwunicluster" or "horeka". Defines the cluster you are working on
@@ -40,21 +39,10 @@ How to calculate the number of chained jobs:
     But if the time is not enough and the search stops before it is finished you still have the option to continue it.
   
 
-- observation_budget: 60 # Max number of trials
+- observation_budget: The maximum number of trials sigopt will attempt to find the best hyperparameters
 
 
-- parallel_bandwidth: 4 # Number of parallel evaluations
-
-
-- multimetric_experiment: Defines if multiple metrics/losses/scores should be evaluated. Default should be False.
-If you set this to true your evaluation function needs to return a dict of the metrics:
-```python
-results = [{'name': 'name_of_metric_1',
-            'value': value_of_metric_1},
-           {'name': 'name_of_metric_2',
-            'value': value_of_metric_2}]
-return results
-```
+- parallel_bandwidth: The number of parallel evaluations
 
 ### parameters
 In this paragraph we show parameter examples for some datatypes:
@@ -68,7 +56,7 @@ Range:
   type: int
   bounds:
     min: 1
-    max: 1
+    max: 5
 ```
 Discrete Values:
 ```
@@ -163,7 +151,14 @@ metrics:
     objective: maximize
     strategy: optimize
 ```
-Important: Remember to set the variable "multimetric_experiment" in section "experiment" accordingly.
+If you use multiple metrics your hyperparameter evaluation function has to return a list of dictionaries:
+```python
+results = [{'name': 'name_of_metric_1',
+            'value': value_of_metric_1},
+           {'name': 'name_of_metric_2',
+            'value': value_of_metric_2}]
+return results
+```
 
 - name: the name of the metric. Has to match one name in the dict returned by the evaluation function.
 - objective: defines whether the metric should be maximized or minimized. The two possible values are 'maximize' and 'minimize'
@@ -180,7 +175,8 @@ cluster you use.
     - The partitions with GPUs on the HoreKA cluster:
       - dev_accelerated
       - accelerated
-  
+      
+The options gres, ntasks, mem-per-gpu and time are completely optional and if left empty filled automatically.
   - gres: With this variable you can define resources you want to allocate on the server:
       - We recommend defining the number of GPUs to allocate:
         - 1 GPU: "gres: 'gpu:1' "
@@ -194,16 +190,19 @@ cluster you use.
   - time: The time a single job will run. For more information look at "number_chain_jobs" in section "experiment"
 
 
-### sigopt_options TODO
+### sigopt_options
   - dev_run: Used to toggle dev_run. If dev_run is true, the created suggestions are random and the hyperparameter search won't work.
     Use this option to debug your code and set it to false when your code works.
 
 
-  - project_id: The id of your project. You can find this online when you are logged in to SigOpt
+  - project_id: The id of your project. You can find this online when you are logged in to SigOpt.
+    Make sure that a project with this id exists.
 
 
-  - experiment_name: "tutorial_project" The name of the sigopt experiment. 
-    Make sure that an experiment with this name exists or create one on SigOpt.
+  - experiment_name: The name of the SigOpt experiment.
 
 
-  - client_id: 11949
+  - client_id: Your client id. You can find it online on the SigOpt site: https://app.sigopt.com/tokens/info
+    under the menu points: 
+    - \<Your Username\>
+      - "API Tokens"

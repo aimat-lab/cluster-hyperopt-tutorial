@@ -41,12 +41,12 @@ We added some example hyperparameters.
 ```
 dict: {
     'suggestion': {
-        "hyperparameter_x": value
-        "bootstrap": 1,
-        "criterion": "gini",
-        "max_depth": 5,
-        "max_features": "log2",
-        "n_estimators": 2
+        "hyperparameter_x": value    # Example Hyperparameter
+        "bootstrap": 1,              # Example Hyperparameter
+        "criterion": "gini",         # Example Hyperparameter
+        "max_depth": 5,              # Example Hyperparameter
+        "max_features": "log2",      # Example Hyperparameter
+        "n_estimators": 2            # Example Hyperparameter
     },
     'dataset': 'path/to/dataset/'
     'output_path': path/to/output/dir
@@ -77,17 +77,6 @@ example structure of "run_hyperopt(config)":
   - open a shell in the topmost directory of your local cluster-hyperopt repository
   - activate the conda environment of your choice and execute "pip install -e ." 
   This will install cluster-hyperopt into the active environment.
-
-
-
-- Creating the environment.yaml file:
-  - Is needed to create a conda environment with all dependencies your model needs
-  - Will be used by cluster hyperopt to create an environment where it will execute your model.
-  - needs to be in the topmost folder of your project repo.
-  - can be created by opening a shell, activating the model env. and executing 
-  ```conda env export > environment.yaml```. (Note that the environment.yaml will be
-  created in the directory, in which you created the shell. You might need to move it)
-  - commit the changes inside your repository and push it to github
   
   
 - Creation of the config file:
@@ -149,6 +138,36 @@ example structure of "run_hyperopt(config)":
       project_id: "test_project"
       experiment_name: "tutorial_project"
       client_id: 11949
+    ```
+    
+  - Here is a minimalist configuration file that you can fill out and use:
+    ```yaml
+    model:
+      entry_point: TODO # The python file name that includes the function for evaluating the suggestions
+      function_name: TODO # the function that executes the training and evaluation
+    data_options:
+      dataset_path: TODO # can be empty eg: ""
+    git_options:
+      git_uri: TODO
+      branch: TODO # Either branch or version can be used. Using the option version allows to load specific tags
+    experiment:
+      cluster: TODO  # Either "bwunicluster" or "horeka"
+      number_chain_jobs: TODO # How many times should a job - the suggestion evaluation - be chained together. It is used to
+                           # cirumvent the problem of time outs in the cluster
+      observation_budget: TODO # Max number of trials
+      parallel_bandwidth: TODO # Number of parallel evaluations
+      conda_env: TODO # name of the conda env used for the model 
+    parameters:
+      TODO
+    metrics:
+      TODO
+    sbatch_options:
+      partition: TODO
+    sigopt_options:
+      dev_run: true # Change this to false if your debugged your program
+      project_id: TODO
+      experiment_name: TODO
+      client_id: TODO
     ```
 
 - SigOpt Token file

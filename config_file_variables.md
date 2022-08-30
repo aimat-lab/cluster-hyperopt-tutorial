@@ -44,6 +44,9 @@ How to calculate the number of chained jobs:
 
 - parallel_bandwidth: The number of parallel evaluations
 
+- conda_env: Name of the conda environment used to execute your model
+    This variable is optional, you can also put an environment.yaml file into the topmost folder of your models GitHub repo.
+
 ### parameters
 In this paragraph we show parameter examples for some datatypes:
 Make sure that the names used here match to the names you extract in the train and evaluation function 

@@ -35,7 +35,26 @@ that trains and evaluates the model.
     - run the evaluation algorithm of your model
     - return the loss/score/metric of your model
   - Location: In an arbitrary python file in your github repo. Make sure, that it is uploaded to github.
-  
+
+
+Example structure of "run_hyperopt(config)":
+```python
+    def run_hyperopt(config):
+        # extract hyperparams. Example:
+        max_depth = config["suggestion"]["max_depth"]
+        
+        #run the training algorithm. Example:
+        model = train(max_depth)
+        
+        #evaluiate the model. Example:
+        loss = evaluate(model)
+        
+        #return loss/score/metric
+        return loss
+
+```
+
+
 The python dict mentioned as input has the following structure:
 We added some example hyperparameters.
 ```
@@ -53,22 +72,6 @@ dict: {
 }    
 ```
 
-example structure of "run_hyperopt(config)":
-```python
-    def run_hyperopt(config):
-        # extract hyperparams. Example:
-        max_depth = config["suggestion"]["max_depth"]
-        
-        #run the training algorithm. Example:
-        model = train(max_depth)
-        
-        #evaluiate the model. Example:
-        loss = evaluate(model)
-        
-        #return loss/score/metric
-        return loss
-
-```
 ### Section 3:
 - Installation of cluster-hyperopt:
   - download the repository [cluster-hyperopt](https://github.com/aimat-lab/cluster-hyperopt) to a
@@ -83,7 +86,39 @@ example structure of "run_hyperopt(config)":
   - arbitrary place on the server (BWUniCluster/HoreKA)
   - includes most information needed for hyperparameter optimization:
   - see "config_file_variables.md" for information about every variable
-  - example file:
+  
+- Here is a minimalist configuration file that you can fill out and use:
+  ```yaml
+  model:
+    entry_point: TODO # The python file name that includes the function for evaluating the suggestions
+    function_name: TODO # the function that executes the training and evaluation
+  data_options:
+    dataset_path: TODO # can be empty eg: ""
+  git_options:
+    git_uri: TODO
+    branch: TODO # Either branch or version can be used. Using the option version allows to load specific tags
+  experiment:
+    cluster: TODO  # Either "bwunicluster" or "horeka"
+    number_chain_jobs: TODO # How many times should a job - the suggestion evaluation - be chained together. It is used to
+                         # cirumvent the problem of time outs in the cluster
+    observation_budget: TODO # Max number of trials
+    parallel_bandwidth: TODO # Number of parallel evaluations
+    conda_env: TODO # name of the conda env used for the model 
+  parameters:
+    TODO
+  metrics:
+    TODO
+  sbatch_options:
+    partition: TODO
+  sigopt_options:
+    dev_run: true # Change this to false if your debugged your program
+    project_id: TODO
+    experiment_name: TODO
+    client_id: TODO
+  ```
+    
+
+  - Example file with some example values:
     ```yaml
     model:
       entry_point: "main.py" # The python file name that includes the function for evaluating the suggestions
@@ -139,36 +174,7 @@ example structure of "run_hyperopt(config)":
       experiment_name: "tutorial_project"
       client_id: 11949
     ```
-    
-  - Here is a minimalist configuration file that you can fill out and use:
-    ```yaml
-    model:
-      entry_point: TODO # The python file name that includes the function for evaluating the suggestions
-      function_name: TODO # the function that executes the training and evaluation
-    data_options:
-      dataset_path: TODO # can be empty eg: ""
-    git_options:
-      git_uri: TODO
-      branch: TODO # Either branch or version can be used. Using the option version allows to load specific tags
-    experiment:
-      cluster: TODO  # Either "bwunicluster" or "horeka"
-      number_chain_jobs: TODO # How many times should a job - the suggestion evaluation - be chained together. It is used to
-                           # cirumvent the problem of time outs in the cluster
-      observation_budget: TODO # Max number of trials
-      parallel_bandwidth: TODO # Number of parallel evaluations
-      conda_env: TODO # name of the conda env used for the model 
-    parameters:
-      TODO
-    metrics:
-      TODO
-    sbatch_options:
-      partition: TODO
-    sigopt_options:
-      dev_run: true # Change this to false if your debugged your program
-      project_id: TODO
-      experiment_name: TODO
-      client_id: TODO
-    ```
+  
 
 - SigOpt Token file
   - content of the file:

@@ -14,8 +14,7 @@ This Quickstart is separated into 3 Sections:
 
 A more detailed Tutorial can be found in the [Tutorial.md](https://github.com/u-adrian/Tutorial/blob/main/Tutorial.md) file.
 
-
-### Section 1: Preconditions
+### Section 1 Preconditions
 You need:
 - access to SigOpt
 - access to BWUniCluster or HoreKA
@@ -26,7 +25,7 @@ and your models repository from the server. Create an ssh key pair if needed.
 - a training and an evaluation function for your model
 
 
-### Section 2:
+### Section 2
 In this section we make your model compatible with Cluster Hyperopt.
 Therefore, we create a wrapper function (lets call it "run_hyperopt(config)", but you can name it how you want), 
 that trains and evaluates the model. This is the only function that Cluster Hyperopt will execute from your model repository.
@@ -75,7 +74,7 @@ dict: {
 }    
 ```
 
-### Section 3:
+### Section 3
 - Installation of cluster-hyperopt:
   - download the repository [cluster-hyperopt](https://github.com/aimat-lab/cluster-hyperopt) to a
   location of your choice on the BWUniCluster or HoreKA.
@@ -90,7 +89,7 @@ dict: {
   - arbitrary place on the server (BWUniCluster/HoreKA)
   - includes most information needed for hyperparameter optimization:
   - see [config_file_variables.md](https://github.com/u-adrian/Tutorial/blob/main/config_file_variables.md) for information about every variable
-  
+  - parameters and metrics need to match those used in [Section 2](https://github.com/u-adrian/Tutorial/edit/main/README.md#Section-2) 
 - Here is a minimalist configuration file that you can fill out and use:
   ```yaml
   model:

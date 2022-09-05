@@ -20,13 +20,15 @@ You need:
 - access to SigOpt
 - access to BWUniCluster or HoreKA
 - a GitHub repo for your project/model
-- a conda environment for your model on the BWUniCluster/HoreKA
+- access to needed Repositories 
+- a conda environment (we will call it "E1") for your model on the BWUniCluster/HoreKA
 - a training and an evaluation function for your model
 
 
 ### Section 2:
-create a wrapper function (lets call it "run_hyperopt(config)", but you can name it how you want), 
-that trains and evaluates the model.
+In this section we make your model compatible with Cluster Hyperopt.
+Therefore, we create a wrapper function (lets call it "run_hyperopt(config)", but you can name it how you want), 
+that trains and evaluates the model. This is the only function that Cluster Hyperopt will execute from your model repository.
   - Input: python dict
   - Output: The loss/score/metric of the evaluated model
   - Structure:
@@ -77,8 +79,9 @@ dict: {
   - download the repository [cluster-hyperopt](https://github.com/aimat-lab/cluster-hyperopt) to a
   location of your choice on the BWUniCluster or HoreKA.
   - you can use an existing conda environment or a new one to install cluster-hyperopt
+  (we will call it "E2")
   - open a shell in the topmost directory of your local cluster-hyperopt repository
-  - activate the conda environment of your choice and execute "pip install -e ." 
+  - activate the conda environment of your choice (E2) and execute "pip install -e ." 
   This will install cluster-hyperopt into the active environment.
   
   
@@ -103,7 +106,7 @@ dict: {
                          # cirumvent the problem of time outs in the cluster
     observation_budget: TODO # Max number of trials
     parallel_bandwidth: TODO # Number of parallel evaluations
-    conda_env: TODO # name of the conda env used for the model 
+    conda_env: TODO # name of the conda env used for the model. This is E1, see "Section 1: Preconditions"
   parameters:
     TODO
   metrics:
@@ -116,67 +119,67 @@ dict: {
     experiment_name: TODO
     client_id: TODO
   ```
-    
-
-  - Example file with some example values:
-    ```yaml
-    model:
-      entry_point: "main.py" # The python file name that includes the function for evaluating the suggestions
-      function_name: "run_hyperopt" # the function that executes the training and evaluation
-    data_options:
-      dataset_path: "/path/to/dataset" # can be empty 
-    git_options:
-      git_uri: "git@github.com:u-adrian/Tutorial.git"
-      branch: "main" # Either branch or version can be used. Using the option version allows to load specific tags
-    experiment:
-      cluster: "horeka"  # Either "bwunicluster" or "horeka"
-      number_chain_jobs: 4 # How many times should a job - the suggestion evaluation - be chained together. It is used to
-                           # cirumvent the problem of time outs in the cluster
-      observation_budget: 60 # Max number of trials
-      parallel_bandwidth: 4 # Number of parallel evaluations
-      multimetric_experiment: false
-      conda_env: name_of_env # name of the conda env used for the model 
-    parameters:
-      - name: max_depth
-        type: int
-        bounds:
-          min: 1
-          max: 10
-      - name: n_estimators
-        type: int
-        bounds:
-          min: 1
-          max: 10
-      - name: bootstrap
-        type: int
-        grid:
-          - 0
-          - 1
-      - name: max_features
-        type: categorical
-        categorical_values:
-          - 'sqrt'
-          - 'log2'
-      - name: criterion
-        type: categorical
-        categorical_values:
-          - 'gini'
-          - 'entropy'
-    metrics:
-      - name: accuracy
-        objective: maximize
-        strategy: optimize
-    sbatch_options:
-      partition: "dev_gpu_4"
-    sigopt_options:
-      dev_run: false # If the dev api of sigopt should be used to get the suggestions
-      project_id: "test_project"
-      experiment_name: "tutorial_project"
-      client_id: 11949
-    ```
+  
+- Example file with some example values:
+  ```yaml
+  model:
+    entry_point: "main.py" # The python file name that includes the function for evaluating the suggestions
+    function_name: "run_hyperopt" # the function that executes the training and evaluation
+  data_options:
+    dataset_path: "/path/to/dataset" # can be empty 
+  git_options:
+    git_uri: "git@github.com:u-adrian/Tutorial.git"
+    branch: "main" # Either branch or version can be used. Using the option version allows to load specific tags
+  experiment:
+    cluster: "horeka"  # Either "bwunicluster" or "horeka"
+    number_chain_jobs: 4 # How many times should a job - the suggestion evaluation - be chained together. It is used to
+                         # cirumvent the problem of time outs in the cluster
+    observation_budget: 60 # Max number of trials
+    parallel_bandwidth: 4 # Number of parallel evaluations
+    multimetric_experiment: false
+    conda_env: name_of_env # name of the conda env used for the model 
+  parameters:
+    - name: max_depth
+      type: int
+      bounds:
+        min: 1
+        max: 10
+    - name: n_estimators
+      type: int
+      bounds:
+        min: 1
+        max: 10
+    - name: bootstrap
+      type: int
+      grid:
+        - 0
+        - 1
+    - name: max_features
+      type: categorical
+      categorical_values:
+        - 'sqrt'
+        - 'log2'
+    - name: criterion
+      type: categorical
+      categorical_values:
+        - 'gini'
+        - 'entropy'
+  metrics:
+    - name: accuracy
+      objective: maximize
+      strategy: optimize
+  sbatch_options:
+    partition: "dev_gpu_4"
+  sigopt_options:
+    dev_run: false # If the dev api of sigopt should be used to get the suggestions
+    project_id: "test_project"
+    experiment_name: "tutorial_project"
+    client_id: 11949
+  ```
   
 
-- SigOpt Token file
+- Creation of SigOpt Token file:
+  - This file is needed to authenticate yourself. Without it Cluster hyperopt cannot use the SigOpt Services.
   - content of the file:
     ```
     SIGOPT_TOKEN=**********************************************
@@ -192,7 +195,7 @@ dict: {
 
 ### Section 4: Run HyperOpt
 - Open shell in arbitrary folder (but on the cluster).
-- activate the conda env where cluster-hyperopt is installed
+- activate the conda env where cluster-hyperopt is installed (E2)
   ```bash
   conda activate test_tutorial
   ```

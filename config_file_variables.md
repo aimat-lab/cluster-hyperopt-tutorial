@@ -29,14 +29,15 @@ How to calculate the number of chained jobs:
   - t_eval: Time needed to run one evaluation cycle(Training and evaluating the model for one set 
   of hyperparameters)
   - parallel_bandwith: How many models will be evaluated in parallel, 
-    this variable is defined in the section "sigopt_options"
+    this variable is defined in the section "experiment"
   - time: The time a single job will run on the cluster. This variable is defined in the section "sigopt_options".
     The maximum time a job can run depends on the cluster. We suggest maximizing the time before chaining jobs.
   - observation_budget: How many suggestions will be created and evaluated. 
-    This variable is defined in "sigopt_options" too.
+    This variable is also defined in section "experiment".
   - number_chain_jobs = (observation_budget * t_eval) / (parallel_bandwith * time)
     Round this number up and maybe increase it a bit, to make sure, that the hyperparameter search has enough time.
     But if the time is not enough and the search stops before it is finished you still have the option to continue it.
+    This variable must be an integer value.
   
 
 - observation_budget: The maximum number of trials sigopt will attempt to find the best hyperparameters
@@ -50,7 +51,8 @@ How to calculate the number of chained jobs:
 ### parameters
 In this paragraph we show parameter examples for some datatypes:
 Make sure that the names used here match to the names you extract in the train and evaluation function 
-(See Quickstart.md Section 2) 
+(See [Quickstart Section 2](https://github.com/u-adrian/Tutorial/blob/main/README.md#Section-2) or
+ [Tutorial Section 3](https://github.com/u-adrian/Tutorial/blob/main/Tutorial.md#Section-3)) 
 
 #### Integer:
 Range:
@@ -102,7 +104,7 @@ Discrete Values:
 ``` 
 
 #### Boolean:
-We need to use a trick here, since there is no boolean option:
+We need to use a trick here, since there is no boolean type:
 ```
 - name: use_xy
   type: int
@@ -134,6 +136,15 @@ In this case you have to change your code, so that the String "None" gets conver
 
 ### metrics
 In this section we give an example for single- and multi-metric optimization
+
+Example for a single-metric optimization:
+```yaml
+metrics:
+  - name: inception_score
+    objective: maximize
+    strategy: optimize
+```
+
 Example for multi-metric optimization:
 ```yaml
 metrics:
@@ -147,13 +158,7 @@ metrics:
     objective: minimize
     strategy: store
 ```
-Example for a single-metric optimization:
-```yaml
-metrics:
-  - name: inception_score
-    objective: maximize
-    strategy: optimize
-```
+
 If you use multiple metrics your hyperparameter evaluation function has to return a list of dictionaries:
 ```python
 results = [{'name': 'name_of_metric_1',

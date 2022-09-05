@@ -12,7 +12,7 @@ This Quickstart is separated into 3 Sections:
 - Section 3: Installation of cluster-hyperopt and creation of necessary files
 
 
-A more detailed Tutorial can be found in the Tutorial.md file.
+A more detailed Tutorial can be found in the [Tutorial.md](https://github.com/u-adrian/Tutorial/blob/main/Tutorial.md) file.
 
 
 ### Section 1: Preconditions
@@ -89,7 +89,7 @@ dict: {
 - Creation of the config file:
   - arbitrary place on the server (BWUniCluster/HoreKA)
   - includes most information needed for hyperparameter optimization:
-  - see "config_file_variables.md" for information about every variable
+  - see [config_file_variables.md](https://github.com/u-adrian/Tutorial/blob/main/config_file_variables.md) for information about every variable
   
 - Here is a minimalist configuration file that you can fill out and use:
   ```yaml

@@ -20,7 +20,8 @@ You need:
 - access to SigOpt
 - access to BWUniCluster or HoreKA
 - a GitHub repo for your project/model
-- access to needed Repositories 
+- access to Repositories: make sure you have access to [cluster-hyperopt](https://github.com/aimat-lab/cluster-hyperopt)
+and your models repository from the server. Create an ssh key pair if needed.
 - a conda environment (we will call it "E1") for your model on the BWUniCluster/HoreKA
 - a training and an evaluation function for your model
 
@@ -179,7 +180,7 @@ dict: {
   
 
 - Creation of SigOpt Token file:
-  - This file is needed to authenticate yourself. Without it Cluster hyperopt cannot use the SigOpt Services.
+  - This file is needed for authentication. Without it Cluster hyperopt cannot use the SigOpt Services.
   - content of the file:
     ```
     SIGOPT_TOKEN=**********************************************

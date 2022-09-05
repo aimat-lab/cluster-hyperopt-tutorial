@@ -89,7 +89,7 @@ dict: {
   - arbitrary place on the server (BWUniCluster/HoreKA)
   - includes most information needed for hyperparameter optimization:
   - see [config_file_variables.md](https://github.com/u-adrian/Tutorial/blob/main/config_file_variables.md) for information about every variable
-  - parameters and metrics need to match those used in [Section 2](https://github.com/u-adrian/Tutorial/edit/main/README.md#Section-2) 
+  - parameters and metrics need to match those used in [Section 2](https://github.com/u-adrian/Tutorial#Section-2) 
 - Here is a minimalist configuration file that you can fill out and use:
   ```yaml
   model:

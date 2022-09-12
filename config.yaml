@@ -1,19 +1,19 @@
-model:
-  dataset_path: "/home/kit/iti/ew0464/gan_experiment/dataset/cifar-10-python.tar.gz" #dummy dataset.
-  entry_point: "main.py" # The python file name that includes the function for evaluating the suggestions
-  function_name: "run_hyperopt"
-  copy_data: true # If the data should be copied in the workspace
 git_options:
   git_uri: "git@github.com:u-adrian/Tutorial.git"
-  branch: "main" # Either branch or version can be used. Using the option version allows to load specific tags
+  branch: "main"
+model:
+  entry_point: "main.py"
+  function_name: "run_hyperopt"
+# data_options:
+  # dataset_path: "/home/kit/iti/ew0464/gan_experiment/dataset/cifar-10-python.tar.gz" #dummy dataset. # optional
+  # copy_data: false # optional; default?
 experiment:
-  use_local_workspace: false # If a local experiment folder should be created in root folder or a dedicated workspace
-                            # directory (https://wiki.bwhpc.de/e/Workspace)
-  experiment_name: "tutorial_project"
-  cluster: "horeka"  # Either "bwunicluster" or "horeka"
-  number_chain_jobs: 4 # How many times should a job - the suggestion evaluation - be chained together. It is used to
-                       # cirumvent the problem of time outs in the cluster
-  multimetric_experiment: false
+  # use_local_workspace: false # optional
+  cluster: "bwunicluster"
+  number_chain_jobs: 4
+  parallel_bandwidth: 4
+  observation_budget: 60
+  #conda_env: name_of_env # added
 parameters:
   - name: max_depth
     type: int
@@ -46,13 +46,13 @@ metrics:
     strategy: optimize
 sbatch_options:
   partition: "dev_gpu_4"
-  gres: "gpu:4"
-  ntasks: 4
-  mem-per-gpu: 32000
-  time: "10"
+  #gres: "gpu:4" # optional
+  #ntasks: 4 # optional
+  #mem-per-gpu: 32000 # optional
+  #time: "10" # optional
 sigopt_options:
-  dev_run: false # If the dev api of sigopt should be used to get the suggestions
+  dev_run: true
   project_id: "test_project"
+  experiment_name: "tutorial_project" # added/moved here
   client_id: 11949
-  observation_budget: 60 # Max number of trials
-  parallel_bandwidth: 4 # Number of parallel evaluations
+

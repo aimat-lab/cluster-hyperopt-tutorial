@@ -1,7 +1,11 @@
 # Tutorial
 
 This Project is a Tutorial to set up your model for hyperparameter search using the 
-[cluster-hyperopt repository](https://github.com/aimat-lab/cluster-hyperopt) .
+[cluster-hyperopt repository](https://github.com/aimat-lab/cluster-hyperopt).
+
+You can either create a new repository for this Tutorial and create all files etc.
+as described in this document, or you can use this repository and read this Tutorial
+as an explanation (you still need to create or change some files to get everything running).
 
 This tutorial is separated into 8 Sections:
 
@@ -22,17 +26,24 @@ This tutorial is separated into 8 Sections:
 - Section 8: Appendix: How The implementations of horeka and bwunicluster differ
 
 ### Section 1
+In this section we will create the conda environment needed for our model that we develop.
+It is used to install all dependencies that our model will need.
+In this tutorial we will call this environment 'model_env'.
+
+
 Open a console on your local machine.
 We assume that you have already installed conda.
-Create a new environment using ```conda create -n "tutorial" ```. 
-You can name the environment how you want. We chose "tutorial".
-Make sure pip is installed inside this environment.
+Create a new environment using ```conda create -n "model_env" ```. 
+You can name the environment how you want. We chose "model_env".
+Activate the environment using ```conda activate model_env```.
+Make sure pip is installed.
 Install sklearn using pip:```pip install -U scikit-learn```
 
 ### Section 2
-In this section we will create a simple model. 
+In this section we will create a simple model.
 
-We create a file ```model.py```. It contains the class ```Model```, 
+We create a file ```model.py```.
+It contains the class ```Model```, 
 which has functions to create, train and evaluate a random forest classifier imported from sklearn.
 
 As you can see, the train function allows us to set the number of trees (```n_estimators```), 
@@ -97,8 +108,9 @@ if __name__ == '__main__':
 
 
 ### Section 3
-In this section we create a function that will be called by the 
-hyperparameter optimizer and returns the accuracy and metadata of the model.
+In this section we create a function that will be called by cluster_hyperopt
+and returns the accuracy and metadata of the model. It is the only function in our models repository that
+cluster_hyperopt will execute.
 We add this function to the ```main.py``` file.
 ```run_hyperopt(hyperopt_config=None)``` takes a run configuration as input. 
 This configuration contains the suggested hyperparameters for our model.
@@ -142,7 +154,7 @@ configuration file, which defines all parameters needed for the hyperparameter s
 ### Section 4
 In the 4. Section we create the configuration file needed to run the hyperparameter search. 
 Do not confuse this configuration file with the hyperopt_config parameter
-for the ```run_hyperopt(hyperopt_config=None)``` function, created in section 2.
+for the ```run_hyperopt(hyperopt_config=None)``` function, created in section 3.
 The config file can be split in roughly 8 parts:
    - **model**
    - **git_options**
@@ -156,7 +168,11 @@ The config file can be split in roughly 8 parts:
                      and BWUniCluster, since the parallelization of both differs.
    - **sigopt_options**
 
-We will create the file step by step. Starting with the model options:
+We will create the file step by step. 
+
+A complete config file can be found in this repository. See: [config.yaml](https://github.com/u-adrian/Tutorial/blob/main/config.yaml)
+
+Starting with the model options:
 ```yaml
 model:
     entry_point: "main.py" # The python file name that includes the function for evaluating the suggestions
@@ -166,16 +182,16 @@ model:
 - ```entry_point``` is the python file that includes the ```run_hyperopt(hyperopt_config=None)``` function
 - ```function_name``` defines the name of the function that will be executed by the hyperparameter search algorithm.
     In our case: ```"run_hyperopt"```
-
+--------------------------------------------------------------------
 The next part is about the git options:
 ```yaml
 git_options:
     git_uri: "git@github.com:u-adrian/Tutorial.git"
     branch: "main" # Either branch or version can be used. Using the option version allows to load specific tags
 ```
-- ```git_uri```: The uri to the git repository. This is "git@github.com:u-adrian/Tutorial.git" for this project.
-- The ```branch``` defines the branch of the repository.
-
+- ```git_uri```: The uri to the model repository. This is "git@github.com:u-adrian/Tutorial.git" for this project.
+- ```branch``` defines the branch of the repository.
+--------------------------------------------------------------------
 ```yaml
 experiment:
     cluster: "bwunicluster"  # Either "bwunicluster" or "horeka"
@@ -191,7 +207,7 @@ experiment:
 - ```parallel_bandwidth``` is the number of suggestion that can be created simultaneously. Set this to the
   number of models you evaluate in parallel.
 - ```observation_budget``` defines how many hyperparameter-suggestions can be created in total.
-
+--------------------------------------------------------------------
 Now we define the hyperparameters that we want to optimize.
 - The first hyperparameter is ```max_depth```. The datatype must be integer and we restrict it to an interval from 
     1 to 10.
@@ -230,7 +246,7 @@ parameters:
       - 'gini'
       - 'entropy'
 ```
-
+---------------------------------------------------------------------
 Now we define the metrics we want to optimize:
 The objective is to maximize it. Set the strategy to "optimize"
 ```yaml
@@ -239,7 +255,7 @@ metrics:
     objective: maximize
     strategy: optimize
 ```
-
+----------------------------------------------------------------------
 The ```sbatch_options``` are a crucial part to get the hyperparameter search run properly on
 the BWUniCluster and HoreKA. Since the choice of the cluster affects those settings we will discuss the settings
 for HoreKA and also for the BWUniCluster. You can find a brief description of both implementations here TODO.
@@ -255,7 +271,7 @@ Usage of other variables is possible but only optional. Examples can be found
 sbatch_options:
   partition: "dev_gpu_4"
 ```
-
+-------------------------------------------------------------------------
 In the last step we define the ```sigopt_options```.
 - ```dev_run: true``` is used to test your implementation. 
     The generated suggestion cannot be used to find good hyperparameters.
@@ -274,12 +290,18 @@ sigopt_options:
   experiment_name: "tutorial_project"
   client_id: 11949
 ```
-
+--------------------------------------------
 A complete config file can be found here: [config.yaml](https://github.com/u-adrian/Tutorial/blob/main/config.yaml)
 
 ### Section 5
 To let our hyperparameter search run on the server we need a conda environment, 
-which includes all dependencies.
+which includes all dependencies for our model. Right now this environment only exists on our local machine.
+We created it in section 2 and named it "model_env"
+
+We have two options now:
+1. TODO
+2. TODO
+
 For this we create a file "environment.yaml". With this file "cluster_hyperopt" 
 can create an environment fully automatically.
 

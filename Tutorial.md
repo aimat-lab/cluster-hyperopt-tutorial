@@ -299,20 +299,39 @@ which includes all dependencies for our model. Right now this environment only e
 We created it in section 2 and named it "model_env"
 
 We have two options now:
-1. TODO
-2. TODO
+1. Create an environment by hand on the server and add its name in the config file:
+   ```yaml
+   experiment:
+      cluster: "bwunicluster"  # Either "bwunicluster" or "horeka"
+      number_chain_jobs: 4 # How many times should a job - the suggestion evaluation - be chained together. It is used to
+                       # cirumvent the problem of time outs in the cluster
+      parallel_bandwidth: 4
+      observation_budget: 60
+      conda_env: name_of_env 
+   ```
+   This code snippet shows an updated version of the experiment configuration variables. 
+   Note that we added a new variable at the end "conda_env". It holds the name of the conda env you
+   want to use.
+-----
+2. Create an ```environmenmt.yaml``` file and add it to the topmost folder of your repository as it is 
+   done in this project. At this location cluster_hyperopt can find it.
+   The environment.yaml file contains all information about an environment, 
+   so that cluster hyperopt can create a conda environment from it on the server.
 
-For this we create a file "environment.yaml". With this file "cluster_hyperopt" 
-can create an environment fully automatically.
+   To create such file open a terminal and activate the ```model_env``` using:
 
-Open a shell inside your project folder,
-activate the environment and execute the following command:
+   ```conda activate model_env```
 
-```conda env export > environment.yaml```
+    In the next step create the ```environment.yaml``` file:
+
+    ```conda env export > environment.yaml```
+    
+    Move this file to the correct location, described above.
 
 ### Section 6
 To have access sigopt from the server you need the API Token and Development Token.
-We create a file ```sigopt_token``` where we store those tokens:
+We create a file ```sigopt_token``` where we store those tokens. You can create this file 
+in a location of your choice on the BWUniCluster:
 
 ```
 SIGOPT_TOKEN=**********************************************

@@ -17,13 +17,13 @@ This tutorial is separated into 8 Sections:
 
 - Section 4: The config file, that defines all necessary parameters
 
-- Section 5: SigOpt
+- Section 5: Conda Environment 
 
-- Section 6: Other files needed 
+- Section 6: SigOpt Tokens
 
-- Section 7: Running the Hyperopt 
+- Section 7: Installing Cluster Hyperopt on the BWUniCluster
 
-- Section 8: Appendix: How The implementations of horeka and bwunicluster differ
+- Section 8: Running the hyperparameter search
 
 ### Section 1
 In this section we will create the conda environment needed for our model that we develop.
@@ -152,7 +152,10 @@ configuration file, which defines all parameters needed for the hyperparameter s
 
 
 ### Section 4
-In the 4. Section we create the configuration file needed to run the hyperparameter search. 
+In the 4. Section we create the configuration file needed to run the hyperparameter search.
+You can save this file at an arbitrary location on the BWUniCluster. 
+But memorize the path to it, since you will need it again in Section 8.
+
 Do not confuse this configuration file with the hyperopt_config parameter
 for the ```run_hyperopt(hyperopt_config=None)``` function, created in section 3.
 The config file can be split in roughly 8 parts:
@@ -347,9 +350,34 @@ Now cluster hyperopt can connect to sigopt.
 
 ### Section 7
 
-Now we can run the hyperparameter search
+One last thing we need to do before using cluster_hyperopt is to install it:
+Open a terminal in a location of your choice on the BWUniCluster.
+Use an existing or create a new conda environment.
+
+```conda env create -n "a_new_env"```
+
+And activate it:
+
+```conda activate a_new_env```
+
+Clone the cluster_hyperopt repository
+
+```git clone git@github.com:aimat-lab/cluster-hyperopt.git```
+
+And install it (make sure that pip is installed):
+```
+cd cluster-hyperopt
+pip install -e .
+```
+
+### Section 8
+
+Now we can run the hyperparameter search.
+
 Open a terminal on the BWUniCluster and execute the following command
 
-```python .../sigopt_hyperopt/hyperopt.py start --config_path=.../hypopt_conf.yaml```
+```python .../sigopt_hyperopt/hyperopt.py start --config_path=.../config.yaml```
 
-/sigopt_hyperopt/hyperopt.py is located in the cluster-hyperopt repository, that TODO
+/sigopt_hyperopt/hyperopt.py is located in the cluster-hyperopt repository, that you installed in Section 7.
+
+--config_path is the path to the configuration file you created in Section 4.

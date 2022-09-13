@@ -115,7 +115,7 @@ necessary information for a hyperparameter search.
     sbatch_options:
       partition: TODO
     sigopt_options:
-      dev_run: true # Change this to false if your debugged your program
+      dev_run: true # Change this to false if you debugged your program
       project_id: TODO
       experiment_name: TODO
       client_id: TODO

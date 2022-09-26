@@ -177,22 +177,37 @@ necessary information for a hyperparameter search.
       experiment_name: "tutorial_project"
       client_id: 11949
     ```
+ 
+ 
+#### Creation of SigOpt Token file:
+ 
+To get value suggestions for the hyperparameters from SIGOPT, cluster_hyperopt needs the API Tokens.
+We create a file ```sigopt_token```(but you can name it how you want) where we store those tokens. 
 
-  #### Creation of SigOpt Token file:
-  - This file is needed for authentication. Without it Cluster hyperopt cannot use the SigOpt Services.
-  - content of the file:
-    ```
-    SIGOPT_TOKEN=**********************************************
-    SIGOPT_DEV_TOKEN=**********************************************
-    ```
-    You can find your SIGOPT_TOKEN and SIGOPT_DEV_TOKEN on the 
-  SIGOPT Website: https://app.sigopt.com/tokens/info under the menu points: 
-    - \<Your Username\>
-      - "API Tokens"
-  - You can name the file how you want.
-  - The location on the bwunicluster or horeka is arbitrary 
-  - How to make it accessible to cluster-hyperopt: ```export SIGOPT_ENV_FILE=path_to_this_file```
+You can create this file 
+in a location of your choice on the BWUniCluster/HoreKA:
 
+```
+SIGOPT_TOKEN=**********************************************
+SIGOPT_DEV_TOKEN=**********************************************
+```
+The difference between these two tokens is that the SIGOPT_DEV_TOKEN only provides
+a random suggestion for developing purposes whereas SIGOPT_TOKEN provides serious
+suggestions. This option can then be activated or deactivated in the config file via 
+sigopt_options.dev_run
+
+You can find your SIGOPT_TOKEN and SIGOPT_DEV_TOKEN on the 
+SIGOPT Website: https://app.sigopt.com/tokens/info under the menu points: 
+- \<Your Username\>
+  - "API Tokens"
+
+The next step is to assign an environment variable called SIGOPT_ENV_FILE 
+to the path of this newly created file:
+
+```export SIGOPT_ENV_FILE=path/sigopt_token```
+
+Now cluster hyperopt can find and access the file, read out the tokens and 
+request value suggestions from SIGOPT. 
 ### Section 4 Run HyperOpt
 - Open shell in arbitrary folder (but on the cluster).
 - activate the conda env where cluster-hyperopt is installed (E2)

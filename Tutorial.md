@@ -332,7 +332,8 @@ We have two options now:
     Move this file to the correct location, described above.
 
 ### Section 6
-To have access sigopt from the server you need the API Token and Development Token.
+
+To get value suggestions for the hyperparameters from SIGOPT, cluster_hyperopt needs the API Tokens.
 We create a file ```sigopt_token``` where we store those tokens. You can create this file 
 in a location of your choice on the BWUniCluster:
 
@@ -340,13 +341,22 @@ in a location of your choice on the BWUniCluster:
 SIGOPT_TOKEN=**********************************************
 SIGOPT_DEV_TOKEN=**********************************************
 ```
+The difference between these two tokens is that the SIGOPT_DEV_TOKEN only provides
+a random suggestion for developing purposes whereas SIGOPT_TOKEN provides serious
+suggestions. This option can then be activated or deactivated in the config file via 
+sigopt_options.dev_run
 
-You can find your tokens on the SigOpt website: _Your Username_ >
-Then we store the path to this file in a system variable:
+You can find your SIGOPT_TOKEN and SIGOPT_DEV_TOKEN on the 
+SIGOPT Website: https://app.sigopt.com/tokens/info under the menu points: 
+- \<Your Username\>
+  - "API Tokens"
+
+The next step is to assign an environment variable called SIGOPT_ENV_FILE 
+to the path of this newly created file:
 
 ```export SIGOPT_ENV_FILE=path/sigopt_token```
 
-Now cluster hyperopt can connect to sigopt.
+Now cluster hyperopt can get value suggestions from sigopt.
 
 ### Section 7
 

@@ -80,7 +80,7 @@ dict: {
   location of your choice on the BWUniCluster or HoreKA.
   - you can use an existing conda environment or a new one to install cluster-hyperopt
   (we will call it "E2")
-  - open a shell in the topmost directory of your local cluster-hyperopt repository
+  - open a shell in the topmost directory of the cluster-hyperopt repository
   - activate the conda environment of your choice (E2) and execute "pip install -e ." 
   This will install cluster-hyperopt into the active environment.
   
